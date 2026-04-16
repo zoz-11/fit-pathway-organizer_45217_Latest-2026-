@@ -73,31 +73,9 @@ export const sanitizeUrl = (url: string): string => {
 export const validatePassword = (password: string): { isValid: boolean; errors: string[] } => {
   const errors: string[] = [];
   
-  if (password.length < 8) {
-    errors.push('Password must be at least 8 characters long');
+  if (password.length < 6) {
+    errors.push('Password must be at least 6 characters long');
   }
-  
-  if (!/[A-Z]/.test(password)) {
-    errors.push('Password must contain at least one uppercase letter');
-  }
-  
-  if (!/[a-z]/.test(password)) {
-    errors.push('Password must contain at least one lowercase letter');
-  }
-  
-  if (!/\d/.test(password)) {
-    errors.push('Password must contain at least one number');
-  }
-  
-  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    errors.push('Password must contain at least one special character');
-  }
-
-  if (/(.)\1{2,}/.test(password)) {
-    errors.push('Password must not contain sequences of three or more repeated characters');
-  }
-
-  // Add more checks for common password patterns if needed
   
   return {
     isValid: errors.length === 0,
