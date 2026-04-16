@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { sanitizeEmail, checkAccountLockout, recordLoginAttempt, RateLimiter, validatePassword } from "@/lib/security";
+import { sanitizeEmail, checkAccountLockout, recordLoginAttempt, RateLimiter } from "@/lib/security";
 
 const signInLimiter = new RateLimiter({ windowMs: 15 * 60 * 1000, maxRequests: 5 });
 
@@ -40,13 +40,6 @@ export const SignInForm = () => {
       return;
     }
 
-    // Additional password validation
-    const passwordValidation = validatePassword(password);
-    if (!passwordValidation.isValid) {
-      setError("Password does not meet security requirements.");
-      setLoading(false);
-      return;
-    }
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
