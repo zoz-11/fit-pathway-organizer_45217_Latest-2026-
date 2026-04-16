@@ -11,6 +11,7 @@ import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "sonner";
 import { handleApiError } from "@/lib/utils";
+import { validatePassword } from "@/lib/security";
 import { useState, useEffect, useCallback, ReactNode } from "react";
 import MfaSetupDialog from "@/components/auth/MfaSetupDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -92,8 +93,6 @@ const Settings = () => {
         setDataSharing(JSON.parse(saved));
       }
     } catch (err) {
-      // Don't block app if localStorage parsing fails
-      // eslint-disable-next-line no-console
       console.warn('Failed to load dataSharing from localStorage', err);
     }
   }, []);
@@ -153,6 +152,12 @@ const Settings = () => {
   const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
       toast.error(t('password.mismatch'));
+      return;
+    }
+
+    const passwordValidation = validatePassword(newPassword);
+    if (!passwordValidation.isValid) {
+      toast.error(passwordValidation.errors[0] || 'Password must be at least 6 characters long');
       return;
     }
 
@@ -284,7 +289,6 @@ const Settings = () => {
         </div>
       </PageLayout>
       
-      {/* Profile Visibility Dialog */}
       <Dialog open={showProfileVisibilityDialog} onOpenChange={setShowProfileVisibilityDialog}>
         <DialogContent>
           <DialogHeader>
@@ -316,7 +320,6 @@ const Settings = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Data Sharing Dialog */}
       <Dialog open={showDataSharingDialog} onOpenChange={setShowDataSharingDialog}>
         <DialogContent>
           <DialogHeader>
@@ -356,8 +359,6 @@ const Settings = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Change Password Dialog */}
-      {/* Change Password Dialog */}
       <Dialog open={showPasswordChangeDialog} onOpenChange={setShowPasswordChangeDialog}>
         <DialogContent>
           <DialogHeader>
@@ -385,7 +386,6 @@ const Settings = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Support Dialog */}
       <Dialog open={showSupportDialog} onOpenChange={setShowSupportDialog}>
         <DialogContent>
           <DialogHeader>
@@ -411,7 +411,6 @@ const Settings = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Account Dialog */}
       <Dialog open={showDeleteAccountDialog} onOpenChange={setShowDeleteAccountDialog}>
         <DialogContent>
           <DialogHeader>
