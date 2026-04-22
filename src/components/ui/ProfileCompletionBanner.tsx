@@ -8,15 +8,18 @@ export const ProfileCompletionBanner = () => {
 
   if (!profile) return null;
 
-  const isProfileIncomplete = !profile.phone || !profile.date_of_birth || !profile.emergency_contact_name || !profile.emergency_contact_phone;
+  const requiredFields = [profile.full_name, profile.phone, profile.location, profile.fitness_level];
+  const isProfileIncomplete = requiredFields.some(
+    (field) => !field || String(field).trim().length === 0
+  );
 
   if (!isProfileIncomplete) return null;
 
   return (
-    <Alert className="mb-4 bg-yellow-50 border-yellow-200">
+    <Alert className="mb-4 border-border bg-muted/40">
       <AlertTitle className="mb-2">Complete Your Profile</AlertTitle>
       <AlertDescription className="mb-3">
-        Your profile is incomplete. Please update it to get the most out of FitPathway Organizer.
+        Add your phone number, location, and fitness level to complete your profile.
       </AlertDescription>
       <Button asChild size="sm">
         <Link to="/profile">Complete Profile</Link>
