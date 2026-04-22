@@ -3,14 +3,16 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuthProvider';
 
 export const useStats = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, role } = useAuth();
 
   return useQuery({
-    queryKey: ['stats', user?.id, profile?.role],
+    queryKey: ['stats', user?.id, role, profile?.role],
     queryFn: async () => {
       if (!user || !profile) return null;
 
-      if (profile.role === 'trainer') {
+      const effectiveRole = role ?? profile.role ?? 'athlete';
+
+      if (effectiveRole === 'trainer' || effectiveRole === 'admin') {
         // Get trainer stats
         const [athletesResult, workoutsResult, completedResult] = await Promise.all([
           supabase.from('trainer_athletes').select('id').eq('trainer_id', user.id),

@@ -13,7 +13,7 @@ import { validateAuthHeader, SecurityError, logSecurityEvent } from './security'
 export interface AuthenticatedUser {
   id: string;
   email: string;
-  role: 'trainer' | 'athlete';
+  role: 'admin' | 'trainer' | 'athlete';
   profile: any;
 }
 
@@ -51,18 +51,29 @@ export const validateAuth = async (
       throw new SecurityError('User profile not found', 404, 'PROFILE_NOT_FOUND');
     }
 
-    // Validate user role
-    if (!profile.role || !['trainer', 'athlete'].includes(profile.role)) {
-      logSecurityEvent('AUTH_FAILED', { reason: 'Invalid user role', userId: user.id, role: profile.role });
+    const { data: userRoleRow, error: userRoleError } = await supabaseClient
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (userRoleError) {
+      logSecurityEvent('AUTH_FAILED', { reason: 'Unable to read user role', userId: user.id, error: userRoleError.message });
+      throw new SecurityError('Unable to validate user role', 403, 'INVALID_ROLE');
+    }
+
+    const resolvedRole = userRoleRow?.role ?? profile.role;
+    if (!resolvedRole || !['admin', 'trainer', 'athlete'].includes(resolvedRole)) {
+      logSecurityEvent('AUTH_FAILED', { reason: 'Invalid user role', userId: user.id, role: resolvedRole });
       throw new SecurityError('Invalid user role', 403, 'INVALID_ROLE');
     }
 
-    logSecurityEvent('AUTH_SUCCESS', { userId: user.id, role: profile.role });
+    logSecurityEvent('AUTH_SUCCESS', { userId: user.id, role: resolvedRole });
 
     return {
       id: user.id,
       email: user.email || '',
-      role: profile.role as 'trainer' | 'athlete',
+      role: resolvedRole as 'admin' | 'trainer' | 'athlete',
       profile
     };
   } catch (error) {
@@ -79,15 +90,23 @@ export const validateAuth = async (
 // ROLE-BASED ACCESS CONTROL
 // ========================================
 
-export const requireRole = (requiredRole: 'trainer' | 'athlete' | 'both') => {
+const roleRank: Record<'athlete' | 'trainer' | 'admin', number> = {
+  athlete: 1,
+  trainer: 2,
+  admin: 3,
+};
+
+export const requireRole = (requiredRole: 'admin' | 'trainer' | 'athlete' | 'both') => {
   return (user: AuthenticatedUser): boolean => {
     if (requiredRole === 'both') {
       return true; // Both roles are allowed
     }
-    return user.role === requiredRole;
+
+    return roleRank[user.role] >= roleRank[requiredRole];
   };
 };
 
+export const requireAdmin = requireRole('admin');
 export const requireTrainer = requireRole('trainer');
 export const requireAthlete = requireRole('athlete');
 
@@ -103,8 +122,8 @@ export const validateUserAccess = (
   }
 
   // Trainers can access their athletes' resources
-  if (allowTrainer && user.role === 'trainer') {
-    // Allow trainers to access athlete resources (will be validated by RLS policies)
+  if (allowTrainer && (user.role === 'trainer' || user.role === 'admin')) {
+    // Allow trainers/admins to access athlete resources (will be validated by RLS policies)
     return true;
   }
 

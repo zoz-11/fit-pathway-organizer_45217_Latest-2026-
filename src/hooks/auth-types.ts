@@ -5,7 +5,7 @@ interface Profile {
   id: string;
   full_name: string;
   email: string;
-  role?: 'trainer' | 'athlete';
+  role?: 'admin' | 'trainer' | 'athlete';
   subscription_status?: 'active' | 'expired' | 'trial' | 'cancelled';
   subscription_expiry?: string | null;
   trainer_id?: string | null;

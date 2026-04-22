@@ -1,63 +1,21 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuthProvider';
-import { v4 as uuidv4 } from 'uuid';
 
-// Mock data for messages
-const MOCK_MESSAGES = {
-  enabled: true, // Set to true to use mock data, false to use real data
-  conversations: [
-    {
-      id: '1',
-      full_name: 'John Smith',
-      role: 'trainer',
-      messages: [
-        {
-          id: '101',
-          sender_id: '1',
-          recipient_id: 'current_user',
-          content: 'Hi there! How is your training going?',
-          created_at: new Date(Date.now() - 86400000).toISOString() // 1 day ago
-        },
-        {
-          id: '102',
-          sender_id: 'current_user',
-          recipient_id: '1',
-          content: 'It\'s going well! I completed all the exercises you recommended.',
-          created_at: new Date(Date.now() - 82800000).toISOString() // 23 hours ago
-        },
-        {
-          id: '103',
-          sender_id: '1',
-          recipient_id: 'current_user',
-          content: 'Great job! I\'ve prepared a new workout plan for you.',
-          created_at: new Date(Date.now() - 79200000).toISOString() // 22 hours ago
-        }
-      ]
-    },
-    {
-      id: '2',
-      full_name: 'Sarah Johnson',
-      role: 'trainer',
-      messages: [
-        {
-          id: '201',
-          sender_id: '2',
-          recipient_id: 'current_user',
-          content: 'Don\'t forget about our session tomorrow!',
-          created_at: new Date(Date.now() - 43200000).toISOString() // 12 hours ago
-        },
-        {
-          id: '202',
-          sender_id: 'current_user',
-          recipient_id: '2',
-          content: 'I\'ll be there, thanks for the reminder.',
-          created_at: new Date(Date.now() - 39600000).toISOString() // 11 hours ago
-        }
-      ]
-    }
-  ]
-};
+interface Message {
+  id: string;
+  sender_id: string;
+  recipient_id: string;
+  content: string;
+  created_at: string;
+}
+
+interface Conversation {
+  id: string;
+  full_name: string;
+  role: string | null;
+  messages: Message[];
+}
 
 export const useMessages = (participantId?: string) => {
   const { user } = useAuth();
@@ -65,75 +23,41 @@ export const useMessages = (participantId?: string) => {
 
   const { data: messages, isLoading } = useQuery({
     queryKey: ['messages', user?.id, participantId],
-    queryFn: async () => {
+    queryFn: async (): Promise<Message[]> => {
       if (!user || !participantId) return [];
 
-      // Use mock data if enabled
-      if (MOCK_MESSAGES.enabled) {
-        const conversation = MOCK_MESSAGES.conversations.find(c => c.id === participantId);
-        
-        if (conversation) {
-          // Replace 'current_user' with actual user ID
-          return conversation.messages.map(msg => ({
-            ...msg,
-            sender_id: msg.sender_id === 'current_user' ? user.id : msg.sender_id,
-            recipient_id: msg.recipient_id === 'current_user' ? user.id : msg.recipient_id
-          }));
-        }
-        
-        return [];
-      }
-
-      // Real data fetch
       const { data, error } = await supabase
         .from('messages')
-        .select('*, sender:profiles!sender_id(full_name), recipient:profiles!recipient_id(full_name)')
+        .select('id, sender_id, recipient_id, content, created_at')
         .or(`and(sender_id.eq.${user.id},recipient_id.eq.${participantId}),and(sender_id.eq.${participantId},recipient_id.eq.${user.id})`)
         .order('created_at', { ascending: true });
 
       if (error) throw error;
-      return data;
+      return data ?? [];
     },
     enabled: !!user && !!participantId,
   });
 
   const sendMessage = useMutation({
     mutationFn: async ({ recipientId, content }: { recipientId: string; content: string }) => {
-      if (!user) throw new Error("User not authenticated");
+      if (!user) throw new Error('User not authenticated');
 
-      // Use mock data if enabled
-      if (MOCK_MESSAGES.enabled) {
-        const newMessage = {
-          id: uuidv4(),
-          sender_id: user.id,
-          recipient_id: recipientId,
-          content,
-          created_at: new Date().toISOString()
-        };
-        
-        // Find conversation or create new one
-        const conversationIndex = MOCK_MESSAGES.conversations.findIndex(c => c.id === recipientId);
-        
-        if (conversationIndex >= 0) {
-          MOCK_MESSAGES.conversations[conversationIndex].messages.push(newMessage);
-        }
-        
-        return newMessage;
-      }
-
-      // Real data send
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('messages')
         .insert({
           sender_id: user.id,
           recipient_id: recipientId,
           content,
-        });
+        })
+        .select('id, sender_id, recipient_id, content, created_at')
+        .single();
 
       if (error) throw error;
+      return data;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['messages', user?.id, variables.recipientId] });
+      queryClient.invalidateQueries({ queryKey: ['conversations', user?.id] });
     },
   });
 
@@ -142,23 +66,60 @@ export const useMessages = (participantId?: string) => {
 
 export const useConversations = () => {
   const { user } = useAuth();
-  
+
   const { data: conversations, isLoading } = useQuery({
     queryKey: ['conversations', user?.id],
-    queryFn: async () => {
+    queryFn: async (): Promise<Conversation[]> => {
       if (!user) return [];
-      
-      // Use mock data if enabled
-      if (MOCK_MESSAGES.enabled) {
-        return MOCK_MESSAGES.conversations;
-      }
-      
-      // Real data fetch would go here
-      // This is just a placeholder for the real implementation
-      return [];
+
+      const { data: messageRows, error: messagesError } = await supabase
+        .from('messages')
+        .select('id, sender_id, recipient_id, content, created_at')
+        .or(`sender_id.eq.${user.id},recipient_id.eq.${user.id}`)
+        .order('created_at', { ascending: false });
+
+      if (messagesError) throw messagesError;
+
+      const rows = messageRows ?? [];
+      if (rows.length === 0) return [];
+
+      const byParticipant = new Map<string, Message>();
+
+      rows.forEach((message) => {
+        const otherParticipantId = message.sender_id === user.id ? message.recipient_id : message.sender_id;
+        if (!byParticipant.has(otherParticipantId)) {
+          byParticipant.set(otherParticipantId, message);
+        }
+      });
+
+      const participantIds = Array.from(byParticipant.keys());
+      if (participantIds.length === 0) return [];
+
+      const [profilesResult, rolesResult] = await Promise.all([
+        supabase.from('profiles').select('id, full_name').in('id', participantIds),
+        supabase.from('user_roles').select('user_id, role').in('user_id', participantIds),
+      ]);
+
+      if (profilesResult.error) throw profilesResult.error;
+      if (rolesResult.error) throw rolesResult.error;
+
+      const profileMap = new Map((profilesResult.data ?? []).map((profile) => [profile.id, profile]));
+      const roleMap = new Map((rolesResult.data ?? []).map((role) => [role.user_id, role.role]));
+
+      return participantIds.map((participantId) => {
+        const latestMessage = byParticipant.get(participantId);
+        const profile = profileMap.get(participantId);
+
+        return {
+          id: participantId,
+          full_name: profile?.full_name ?? 'Unknown user',
+          role: roleMap.get(participantId) ?? null,
+          messages: latestMessage ? [latestMessage] : [],
+        };
+      });
     },
     enabled: !!user,
   });
-  
+
   return { conversations, isLoading };
 };

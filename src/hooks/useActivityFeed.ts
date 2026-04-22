@@ -10,15 +10,17 @@ export interface ActivityItem {
 }
 
 export const useActivityFeed = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, role } = useAuth();
 
   return useQuery({
-    queryKey: ['activityFeed', user?.id, profile?.role],
+    queryKey: ['activityFeed', user?.id, role, profile?.role],
     queryFn: async (): Promise<ActivityItem[]> => {
       if (!user || !profile) return [];
 
       try {
-        if (profile.role === 'trainer') {
+        const effectiveRole = role ?? profile.role ?? 'athlete';
+
+        if (effectiveRole === 'trainer' || effectiveRole === 'admin') {
           // For trainers: show completed workouts from all their athletes
           const { data: completedWorkouts, error } = await supabase
             .from('workout_schedules')

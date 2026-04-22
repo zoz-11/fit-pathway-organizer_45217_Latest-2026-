@@ -2,36 +2,40 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Send, MessageCircle, Users, Search } from "lucide-react";
+import { MessageCircle, Users, Search } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { useAuth } from "@/hooks/useAuthProvider";
 import { ChatWindow } from "@/components/messages/ChatWindow";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useConversations } from "@/hooks/useMessages";
 
 const Messages = () => {
-  const { user, profile, loading: isLoadingAuth } = useAuth();
   const [selectedParticipantId, setSelectedParticipantId] = useState<string | null>(null);
   const [selectedParticipantName, setSelectedParticipantName] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Use the new hook for conversations
   const { conversations, isLoading: isLoadingConversations } = useConversations();
 
-  const filteredConversations = conversations?.filter(c => 
-    c.full_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredConversations = conversations?.filter((conversation) =>
+    conversation.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+  ) ?? [];
 
   useEffect(() => {
-    if (filteredConversations && filteredConversations.length > 0 && !selectedParticipantId) {
+    if (filteredConversations.length === 0) {
+      setSelectedParticipantId(null);
+      setSelectedParticipantName(null);
+      return;
+    }
+
+    const selectedStillExists = filteredConversations.some((conversation) => conversation.id === selectedParticipantId);
+    if (!selectedParticipantId || !selectedStillExists) {
       setSelectedParticipantId(filteredConversations[0].id);
       setSelectedParticipantName(filteredConversations[0].full_name);
     }
   }, [filteredConversations, selectedParticipantId]);
 
-  if (isLoadingAuth || isLoadingConversations) {
+  if (isLoadingConversations) {
     return (
       <AppLayout>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 h-full">
@@ -72,14 +76,7 @@ const Messages = () => {
                 <MessageCircle className="h-5 w-5" />
                 Messages
               </CardTitle>
-              <Button 
-                size="sm" 
-                variant="outline"
-                onClick={() => {
-                  // TODO: Implement new chat functionality
-                  console.log('New chat clicked');
-                }}
-              >
+              <Button size="sm" variant="outline" disabled>
                 <Users className="h-4 w-4 mr-2" />
                 New Chat
               </Button>
@@ -96,7 +93,7 @@ const Messages = () => {
           </CardHeader>
           <CardContent className="flex-1 p-0 overflow-y-auto">
             <div className="space-y-1">
-              {filteredConversations && filteredConversations.length > 0 ? (
+              {filteredConversations.length > 0 ? (
                 filteredConversations.map((conv) => (
                   <div
                     key={conv.id}
@@ -119,7 +116,10 @@ const Messages = () => {
                     <div className="flex items-start gap-3">
                       <Avatar className="h-10 w-10">
                         <AvatarFallback>
-                          {conv.full_name.split(' ').map(n => n[0]).join('')}
+                          {conv.full_name
+                            .split(' ')
+                            .map((namePart) => namePart[0])
+                            .join('')}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
@@ -131,19 +131,24 @@ const Messages = () => {
                                 Trainer
                               </Badge>
                             )}
+                            {conv.role === 'admin' && (
+                              <Badge variant="secondary" className="ml-2 text-xs">
+                                Admin
+                              </Badge>
+                            )}
                           </h3>
                         </div>
-                        {conv.messages && conv.messages.length > 0 && (
-                          <p className="text-xs text-muted-foreground truncate">
-                            {conv.messages[conv.messages.length - 1].content}
-                          </p>
+                        {conv.messages.length > 0 && (
+                          <p className="text-xs text-muted-foreground truncate">{conv.messages[0].content}</p>
                         )}
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="p-4 text-muted-foreground text-center">No conversations found.</div>
+                <div className="p-6 text-muted-foreground text-center">
+                  {searchTerm ? 'No conversations match your search.' : 'No conversations yet.'}
+                </div>
               )}
             </div>
           </CardContent>
@@ -154,7 +159,7 @@ const Messages = () => {
             <ChatWindow participantId={selectedParticipantId} participantName={selectedParticipantName} />
           ) : (
             <Card className="flex-1 flex items-center justify-center h-full">
-              <p className="text-muted-foreground">Select a conversation to start chatting.</p>
+              <p className="text-muted-foreground">No conversation selected.</p>
             </Card>
           )}
         </div>
