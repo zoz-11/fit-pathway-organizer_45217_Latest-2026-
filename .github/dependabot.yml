@@ -1,11 +1,49 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
-
 version: 2
+
 updates:
-  - package-ecosystem: "" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  # npm dependencies
+  - package-ecosystem: npm
+    directory: /
     schedule:
-      interval: "weekly"
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Asia/Riyadh
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+      - security
+    groups:
+      radix-ui:
+        patterns:
+          - '@radix-ui/*'
+      testing:
+        patterns:
+          - '@testing-library/*'
+          - '@types/jest'
+          - 'jest*'
+          - 'babel*'
+          - 'ts-jest'
+      typescript:
+        patterns:
+          - 'typescript*'
+          - '@typescript-eslint/*'
+      vite:
+        patterns:
+          - 'vite'
+          - '@vitejs/*'
+          - 'rollup'
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
+
+  # GitHub Actions
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    labels:
+      - dependencies
+      - github-actions
