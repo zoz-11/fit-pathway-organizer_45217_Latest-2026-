@@ -65,6 +65,10 @@ const Profile = () => {
       const fileExt = file.name.split('.').pop();
       const filePath = `${profile?.id}/avatar.${fileExt}`;
       
+      if (filePath.includes('..')) {
+        throw new Error('Invalid file path');
+      }
+      
       setUploading(true);
       
       // Upload the file to Supabase storage
