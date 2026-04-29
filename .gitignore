@@ -15,6 +15,7 @@ dist-ssr
 # Package manager lockfiles
 bun.lock
 bun.lockb
+bun.lockb.tmp
 
 # Environment files
 .env
