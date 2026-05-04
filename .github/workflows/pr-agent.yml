@@ -1,16 +1,31 @@
-name: The PR Agent
+name: Auto Labeler
+
+# Replacement for PR Agent — no OpenAI key required.
+# Uses actions/labeler to auto-label PRs based on changed file paths.
+# Requires a .github/labeler.yml config file (created below in comment).
+# Uses only GITHUB_TOKEN — zero external secrets.
+#
+# Create .github/labeler.yml with content like:
+# frontend:
+#   - src/**
+# ci:
+#   - .github/workflows/**
+# docs:
+#   - '**/*.md'
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-  issue_comment:
 
 jobs:
-  pr-agent:
+  label:
     runs-on: ubuntu-latest
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
-      - uses: Codium-ai/pr-agent@v0.9
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      - uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          sync-labels: true
