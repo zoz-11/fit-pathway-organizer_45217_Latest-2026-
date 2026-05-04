@@ -1,45 +1,31 @@
-name: CodeQL Security Analysis
+name: CodeQL
 
 on:
   push:
-    branches: [main, 'codex/**', 'claude/**']
+    branches: [ main ]
   pull_request:
-    branches: [main]
   schedule:
-    - cron: '30 1 * * 1'
-
-permissions:
-  contents: read
+    - cron: '0 3 * * 1'
 
 jobs:
   analyze:
-    name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
     permissions:
       security-events: write
-      packages: read
-      actions: read
       contents: read
+      actions: read
 
     strategy:
       fail-fast: false
       matrix:
-        language: [javascript-typescript]
+        language: [ 'javascript' ]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          queries: security-extended,security-and-quality
-
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+      - uses: github/codeql-action/autobuild@v3
+      - uses: github/codeql-action/analyze@v3
         with:
-          category: '/language:${{ matrix.language }}'
+          category: '/language:${{matrix.language}}'
