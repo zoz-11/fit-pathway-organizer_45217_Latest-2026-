@@ -1,0 +1,53 @@
+name: Create Labels
+
+# Runs once manually (or on first push) to create all labels used by auto-labeler.
+# After labels exist, you can disable or delete this workflow.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/labeler.yml'
+
+jobs:
+  create-labels:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Create all labels
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const labels = [
+              { name: 'frontend',     color: '0075ca', description: 'Changes to frontend source files' },
+              { name: 'components',   color: '7057ff', description: 'Changes to React components' },
+              { name: 'pages',        color: 'e4e669', description: 'Changes to page components' },
+              { name: 'hooks',        color: 'f9d0c4', description: 'Changes to custom hooks' },
+              { name: 'styles',       color: 'fef2c0', description: 'CSS / Tailwind / styling changes' },
+              { name: 'config',       color: 'd93f0b', description: 'Config file changes' },
+              { name: 'ci',           color: '0e8a16', description: 'CI/CD workflow changes' },
+              { name: 'dependencies', color: 'e11d48', description: 'Package dependency updates' },
+              { name: 'docs',         color: '0052cc', description: 'Documentation changes' },
+              { name: 'tests',        color: 'bfd4f2', description: 'Test file changes' },
+              { name: 'assets',       color: 'c2e0c6', description: 'Static asset changes' },
+            ];
+
+            for (const label of labels) {
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ...label
+                });
+                console.log(`Created: ${label.name}`);
+              } catch (e) {
+                if (e.status === 422) {
+                  console.log(`Already exists: ${label.name}`);
+                } else {
+                  throw e;
+                }
+              }
+            }
