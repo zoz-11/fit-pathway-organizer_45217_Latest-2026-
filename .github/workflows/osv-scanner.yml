@@ -10,16 +10,19 @@ on:
 jobs:
   osv-scan:
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
       security-events: write
-      actions: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install OSV Scanner
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/google/osv-scanner/main/install.sh | bash
 
       - name: Run OSV Scanner
-        uses: google/osv-scanner-action@v2.3.8
-        with:
-          scan-args: |-
-            --lockfile=package-lock.json
+        run: |
+          ./osv-scanner --lockfile=package-lock.json
