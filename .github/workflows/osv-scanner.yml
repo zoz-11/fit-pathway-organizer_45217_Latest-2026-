@@ -1,0 +1,28 @@
+name: OSV Dependency Scan
+
+on:
+  push:
+    branches: [ main, staging ]
+  pull_request:
+  schedule:
+    - cron: '0 4 * * 1'
+
+jobs:
+  osv-scan:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install OSV Scanner
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/google/osv-scanner/main/install.sh | bash
+
+      - name: Run OSV Scanner
+        run: |
+          ./osv-scanner --lockfile=package-lock.json
