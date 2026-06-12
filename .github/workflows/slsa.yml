@@ -3,6 +3,7 @@ name: SLSA Supply Chain Security
 on:
   push:
     branches: [main]
+  pull_request:
   release:
     types: [created]
 

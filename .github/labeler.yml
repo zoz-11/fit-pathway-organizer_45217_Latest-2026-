@@ -1,0 +1,82 @@
+# Auto-labeler config for actions/labeler@v5
+# Labels are applied automatically to PRs based on changed file paths.
+
+frontend:
+  - changed-files:
+    - any-glob-to-any-file:
+      - src/**
+      - public/**
+      - index.html
+
+components:
+  - changed-files:
+    - any-glob-to-any-file:
+      - src/components/**
+
+pages:
+  - changed-files:
+    - any-glob-to-any-file:
+      - src/pages/**
+
+hooks:
+  - changed-files:
+    - any-glob-to-any-file:
+      - src/hooks/**
+
+styles:
+  - changed-files:
+    - any-glob-to-any-file:
+      - src/**/*.css
+      - src/**/*.scss
+      - src/**/*.tailwind.*
+      - tailwind.config.*
+
+config:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '*.config.*'
+      - vite.config.*
+      - tsconfig.*
+      - jsconfig.*
+      - .eslintrc.*
+      - .prettierrc.*
+      - babel.config.*
+
+ci:
+  - changed-files:
+    - any-glob-to-any-file:
+      - .github/workflows/**
+      - .github/**
+
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - package.json
+      - package-lock.json
+      - yarn.lock
+
+docs:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.md'
+      - docs/**
+      - README*
+
+tests:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.test.*'
+      - '**/*.spec.*'
+      - '__tests__/**'
+      - cypress/**
+      - vitest.config.*
+
+assets:
+  - changed-files:
+    - any-glob-to-any-file:
+      - public/**
+      - src/assets/**
+      - '**/*.svg'
+      - '**/*.png'
+      - '**/*.jpg'
+      - '**/*.ico'

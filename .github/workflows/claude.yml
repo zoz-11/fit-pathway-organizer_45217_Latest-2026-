@@ -1,0 +1,29 @@
+name: Request Copilot Review
+
+# Replacement for Claude Code Action — no API key required.
+# GitHub Copilot automatically reviews every PR for free on public repos.
+# On private repos: requires GitHub Copilot subscription (already included
+# in many GitHub plans). Uses only GITHUB_TOKEN — zero external secrets.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  copilot-review:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Request Copilot Code Review
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              reviewers: ['copilot-pull-request-reviewer']
+            });
+            console.log('Copilot review requested for PR #' + context.payload.pull_request.number);

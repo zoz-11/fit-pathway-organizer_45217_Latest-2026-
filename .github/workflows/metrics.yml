@@ -1,0 +1,31 @@
+name: GitHub Metrics
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  github-metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: lowlighter/metrics@v3.34
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          user: zoz-11
+          template: classic
+          base: header, activity, community, repositories, metadata
+          filename: metrics.svg
+
+      - name: Commit metrics
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add metrics.svg
+          git diff --staged --quiet || git commit -m 'Update metrics [skip ci]'
+          git push
