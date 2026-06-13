@@ -71,8 +71,8 @@ serve(async (req) => {
 
     // Fetch user workout assignments
     const { data: workoutAssignments, error: waError } = await supabaseClient
-      .from('workout_assignments')
-      .select('*, workout:workouts(*)')
+      .from('workout_schedules')
+      .select('*')
       .eq('athlete_id', userId);
     if (waError) throw waError;
 

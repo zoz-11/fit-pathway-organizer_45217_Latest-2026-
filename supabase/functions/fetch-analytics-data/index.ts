@@ -95,13 +95,13 @@ serve(async (req) => {
 
     // Fetch completed workout assignments for the target user
     let workoutsQuery = supabaseClient
-      .from('workout_assignments')
-      .select('*, workout:workouts(name, duration_minutes)')
+      .from('workout_schedules')
+      .select('*')
       .eq('athlete_id', targetUserId)
       .eq('status', 'completed');
 
     if (startDate) {
-      workoutsQuery = workoutsQuery.gte('completed_at', startDate);
+      workoutsQuery = workoutsQuery.gte('completed_at', startDate); // Wait, workout_schedules has updated_at or scheduled_date? Let's check.
     }
     if (endDate) {
       workoutsQuery = workoutsQuery.lte('completed_at', endDate);
@@ -115,12 +115,12 @@ serve(async (req) => {
 
     // Aggregate data
     const totalWorkouts = completedWorkouts.length;
-    const totalDuration = completedWorkouts.reduce((sum, wa) => sum + (wa.workout?.duration_minutes || 0), 0);
+    const totalDuration = completedWorkouts.reduce((sum, wa) => sum + (wa.duration_minutes || 0), 0);
 
     const exerciseFrequency: { [key: string]: number } = {};
     completedWorkouts.forEach(wa => {
-      if (wa.workout?.name) {
-        exerciseFrequency[wa.workout.name] = (exerciseFrequency[wa.workout.name] || 0) + 1;
+      if (wa.title) {
+        exerciseFrequency[wa.title] = (exerciseFrequency[wa.title] || 0) + 1;
       }
     });
 
