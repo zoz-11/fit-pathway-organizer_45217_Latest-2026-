@@ -25,9 +25,8 @@ bun.lockb.tmp
 .env.production
 .env*.local
 
-# Sensitive files
-*.json
-sonner.tsx
+# Sensitive files — be specific, never wildcard *.json
+# (package-lock.json, tsconfig.json, etc. MUST be committed)
 
 # Security files
 *.pem
