@@ -256,7 +256,7 @@ const handler = async (req: Request): Promise<Response> => {
         `;
         break;
       case 'invitation':
-        subject = '🤝 You've been invited to FitPathway!';
+        subject = `🤝 You've been invited to FitPathway!`;
         html = `
           <h1>Invitation to FitPathway</h1>
           <p>Hi there!</p>
