@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Package manager lockfiles
+bun.lock
+bun.lockb
+bun.lockb.tmp
+
 # Environment files
 .env
 .env.local
@@ -20,9 +25,8 @@ dist-ssr
 .env.production
 .env*.local
 
-# Sensitive files
-*.json
-sonner.tsx
+# Sensitive files — be specific, never wildcard *.json
+# (package-lock.json, tsconfig.json, etc. MUST be committed)
 
 # Security files
 *.pem
@@ -42,3 +46,4 @@ certificates/
 *.njsproj
 *.sln
 *.sw?
+supabase/.temp/

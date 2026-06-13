@@ -82,8 +82,8 @@ serve(async (req) => {
         .single();
 
       if (profileError || profileData?.role !== 'trainer') {
-        await logAudit(supabaseClient, user.id, 'Fetch Progress Data Failed', { reason: 'Forbidden: Not authorized to view other user's data', requestedUserId: requestedUserId, ipAddress: req.headers.get('x-forwarded-for') });
-        return new Response(JSON.stringify({ error: 'Forbidden: Not authorized to view other user's data' }), {
+        await logAudit(supabaseClient, user.id, 'Fetch Progress Data Failed', { reason: 'Forbidden: Not authorized to view other user\'s data', requestedUserId: requestedUserId, ipAddress: req.headers.get('x-forwarded-for') });
+        return new Response(JSON.stringify({ error: 'Forbidden: Not authorized to view other user\'s data' }), {
           status: 403,
           headers: { 'Content-Type': 'application/json', ...corsHeaders },
         });
