@@ -1,27 +1,28 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { z } from "npm:zod@3.23.4";
-import { initializeApp, cert } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-admin-app.js";
-import { getMessaging } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-admin-messaging.js";
+import { initializeApp, cert, getApps } from "npm:firebase-admin@12.1.0/app";
+import { getMessaging } from "npm:firebase-admin@12.1.0/messaging";
 
 // Initialize Firebase Admin SDK
 const firebaseAdminConfig = {
   projectId: Deno.env.get("FIREBASE_ADMIN_PROJECT_ID"),
   clientEmail: Deno.env.get("FIREBASE_ADMIN_CLIENT_EMAIL"),
-  privateKey: Deno.env.get("FIREBASE_ADMIN_PRIVATE_KEY")?.replace(/\n/g, '\n'),
+  privateKey: Deno.env.get("FIREBASE_ADMIN_PRIVATE_KEY")?.replace(/\\n/g, '\n'),
 };
 
 // Check if Firebase app is already initialized to avoid re-initialization errors
 let firebaseAdminApp;
 try {
-  firebaseAdminApp = initializeApp(cert(firebaseAdminConfig));
-} catch (error) {
-  // If already initialized, retrieve the existing app
-  if (error.code === 'app/duplicate-app') {
-    firebaseAdminApp = initializeApp(cert(firebaseAdminConfig), "[DEFAULT]");
+  if (getApps().length === 0) {
+    firebaseAdminApp = initializeApp({
+      credential: cert(firebaseAdminConfig)
+    });
   } else {
-    console.error("Error initializing Firebase Admin SDK:", error);
+    firebaseAdminApp = getApps()[0];
   }
+} catch (error) {
+  console.error("Error initializing Firebase Admin SDK:", error);
 }
 
 const messagingAdmin = getMessaging(firebaseAdminApp);

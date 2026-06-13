@@ -1,0 +1,55 @@
+57	Update UI and Testing libs	update-testing-ui	CLOSED	2026-06-13T04:07:40Z
+56	Update Supabase to latest	update-supabase	MERGED	2026-06-13T04:07:26Z
+55	Update core libraries	update-core-libs	MERGED	2026-06-13T04:07:12Z
+54	Normalize npm lockfile and simplify ESLint configuration	staging	MERGED	2026-06-08T06:53:44Z
+53	build(deps): bump esbuild and vite	dependabot/npm_and_yarn/multi-f57e1e291f	CLOSED	2026-06-04T02:40:19Z
+52	build(deps): bump rollup from 4.44.2 to 4.61.0	dependabot/npm_and_yarn/rollup-4.61.0	CLOSED	2026-06-04T02:39:52Z
+51	build(deps): bump ws from 8.18.3 to 8.21.0	dependabot/npm_and_yarn/ws-8.21.0	CLOSED	2026-05-29T14:52:13Z
+50	build(deps-dev): bump brace-expansion from 1.1.12 to 1.1.15	dependabot/npm_and_yarn/brace-expansion-1.1.15	CLOSED	2026-05-29T14:52:01Z
+49	build(deps-dev): bump @babel/plugin-transform-modules-systemjs from 7.27.1 to 7.29.7	dependabot/npm_and_yarn/babel/plugin-transform-modules-systemjs-7.29.7	CLOSED	2026-05-25T13:18:47Z
+48	build(deps-dev): bump postcss from 8.5.6 to 8.5.15	dependabot/npm_and_yarn/postcss-8.5.15	CLOSED	2026-05-22T05:16:55Z
+47	build(deps-dev): bump brace-expansion from 1.1.12 to 2.1.0	dependabot/npm_and_yarn/brace-expansion-2.1.0	CLOSED	2026-05-22T05:16:39Z
+46	build(deps-dev): bump minimatch from 3.1.2 to 9.0.9	dependabot/npm_and_yarn/minimatch-9.0.9	CLOSED	2026-05-22T05:16:21Z
+45	build(deps): bump vite from 5.4.19 to 8.0.14	dependabot/npm_and_yarn/vite-8.0.14	CLOSED	2026-05-22T05:15:40Z
+44	build(deps-dev): bump js-yaml from 3.14.1 to 4.1.1	dependabot/npm_and_yarn/js-yaml-4.1.1	CLOSED	2026-05-22T05:15:17Z
+43	build(deps): bump rollup from 4.44.2 to 4.60.4	dependabot/npm_and_yarn/rollup-4.60.4	CLOSED	2026-05-22T05:14:59Z
+41	build(deps): bump actions/deploy-pages from 4 to 5	dependabot/github_actions/actions/deploy-pages-5	CLOSED	2026-05-11T18:36:11Z
+40	Bump vite from 5.4.19 to 8.0.12	dependabot/npm_and_yarn/vite-8.0.12	CLOSED	2026-05-11T12:35:02Z
+39	Bump yaml from 2.8.0 to 2.9.0	dependabot/npm_and_yarn/yaml-2.9.0	CLOSED	2026-05-11T12:34:03Z
+38	Bump vite from 5.4.19 to 8.0.11	dependabot/npm_and_yarn/vite-8.0.11	CLOSED	2026-05-09T17:15:03Z
+37	Bump @babel/plugin-transform-modules-systemjs from 7.27.1 to 7.29.4	dependabot/npm_and_yarn/babel/plugin-transform-modules-systemjs-7.29.4	CLOSED	2026-05-09T17:13:56Z
+36	fix: upgrade react-router-dom 7.6.3→7.12.0 (CVE security patch)	fix/react-router-security-patch	MERGED	2026-05-05T01:17:56Z
+35	Bump postcss from 8.5.6 to 8.5.14	dependabot/npm_and_yarn/postcss-8.5.14	CLOSED	2026-05-04T23:02:53Z
+34	Bump rollup from 4.44.2 to 4.60.3	dependabot/npm_and_yarn/rollup-4.60.3	CLOSED	2026-05-04T23:02:42Z
+32	Bump super-linter/super-linter from 7 to 8.3.1 in /.github/workflows in the github_actions group across 1 directory	dependabot/github_actions/dot-github/workflows/github_actions-ba0e98f37e	CLOSED	2026-05-04T22:54:28Z
+31	Bump js-yaml from 3.14.1 to 3.14.2	dependabot/npm_and_yarn/js-yaml-3.14.2	CLOSED	2026-05-04T08:38:34Z
+30	Bump yaml from 2.8.0 to 2.8.4	dependabot/npm_and_yarn/yaml-2.8.4	CLOSED	2026-05-04T08:38:17Z
+29	Bump minimatch from 3.1.2 to 3.1.5	dependabot/npm_and_yarn/minimatch-3.1.5	CLOSED	2026-05-04T08:38:06Z
+28	Bump rollup from 4.44.2 to 4.60.2	dependabot/npm_and_yarn/rollup-4.60.2	CLOSED	2026-05-04T08:37:47Z
+27	Bump form-data from 3.0.3 to 3.0.4	dependabot/npm_and_yarn/form-data-3.0.4	CLOSED	2026-05-04T08:37:21Z
+26	chore: normalize npm baseline and remove Bun lockfile	chore/npm-baseline-lockfile-normalization	MERGED	2026-04-29T04:04:58Z
+25	[Aikido] AI Fix for Path traversal attack possible	fix/aikido-security-sast-25542265-tnah	MERGED	2026-04-23T10:25:04Z
+24	[Aikido] Fix security issue in react-router via minor version upgrade from 7.6.3 to 7.14.2	fix/aikido-security-update-packages-25538611-txr7	MERGED	2026-04-23T10:18:14Z
+23	[Aikido] Fix security issue in react-router-dom via minor version upgrade from 7.6.3 to 7.14.2	fix/aikido-security-update-packages-25538087-qmie	CLOSED	2026-04-23T10:16:14Z
+22	Bump flatted from 3.3.3 to 3.4.2	dependabot/npm_and_yarn/flatted-3.4.2	CLOSED	2026-04-23T09:44:26Z
+21	Bump vite from 5.4.19 to 8.0.10	dependabot/npm_and_yarn/vite-8.0.10	CLOSED	2026-04-23T09:44:25Z
+20	Bump brace-expansion from 1.1.12 to 1.1.14	dependabot/npm_and_yarn/brace-expansion-1.1.14	CLOSED	2026-04-23T09:44:18Z
+19	Bump yaml from 2.8.0 to 2.8.3	dependabot/npm_and_yarn/yaml-2.8.3	CLOSED	2026-04-23T09:44:18Z
+18	Bump picomatch	dependabot/npm_and_yarn/multi-bf05dc1ecf	CLOSED	2026-04-23T09:44:14Z
+17	Bump lodash from 4.17.21 to 4.18.1	dependabot/npm_and_yarn/lodash-4.18.1	CLOSED	2026-04-23T09:44:14Z
+16	Bump uuid from 11.1.0 to 14.0.0	dependabot/npm_and_yarn/uuid-14.0.0	CLOSED	2026-04-23T09:44:12Z
+15	Bump @babel/preset-react from 7.27.1 to 7.28.5	dependabot/npm_and_yarn/babel/preset-react-7.28.5	CLOSED	2026-04-22T13:52:43Z
+14	Bump recharts from 3.0.2 to 3.8.1	dependabot/npm_and_yarn/recharts-3.8.1	CLOSED	2026-04-22T13:52:34Z
+13	Bump @supabase/supabase-js from 2.50.3 to 2.104.0	dependabot/npm_and_yarn/supabase/supabase-js-2.104.0	CLOSED	2026-04-22T13:52:23Z
+12	Bump @babel/core from 7.28.0 to 7.29.0	dependabot/npm_and_yarn/babel/core-7.29.0	CLOSED	2026-04-22T13:52:14Z
+11	Bump tailwind-merge from 3.3.1 to 3.5.0	dependabot/npm_and_yarn/tailwind-merge-3.5.0	CLOSED	2026-04-22T13:52:04Z
+10	Bump eslint-plugin-react-refresh from 0.4.20 to 0.5.2	dependabot/npm_and_yarn/eslint-plugin-react-refresh-0.5.2	CLOSED	2026-04-22T13:51:53Z
+9	build(deps): bump the vite group across 1 directory with 3 updates	dependabot/npm_and_yarn/vite-d7df9bee90	CLOSED	2026-04-22T13:51:46Z
+8	build(deps-dev): bump typescript from 5.8.3 to 5.9.3 in the typescript group across 1 directory	dependabot/npm_and_yarn/typescript-2809fc5bb6	CLOSED	2026-04-22T13:51:12Z
+7	build(deps-dev): bump the testing group across 1 directory with 8 updates	dependabot/npm_and_yarn/testing-4284585ffb	CLOSED	2026-04-22T13:50:56Z
+6	build(deps): bump the radix-ui group across 1 directory with 26 updates	dependabot/npm_and_yarn/radix-ui-f82a62f1ef	CLOSED	2026-04-22T13:49:45Z
+5	Bump actions/setup-node from 4 to 6	dependabot/github_actions/actions/setup-node-6	CLOSED	2026-04-22T13:46:45Z
+4	Bump actions/upload-artifact from 4 to 7	dependabot/github_actions/actions/upload-artifact-7	CLOSED	2026-04-22T13:46:41Z
+3	Bump actions/checkout from 4 to 6	dependabot/github_actions/actions/checkout-6	CLOSED	2026-04-22T13:46:37Z
+2	Bump github/codeql-action from 3 to 4	dependabot/github_actions/github/codeql-action-4	CLOSED	2026-04-22T13:46:34Z
+1	Messages: use Supabase for conversations, clean i18n, and enforce admin>trainer>athlete roles	codex/fix-usemessages-and-clean-languagecontext	DRAFT	2026-04-22T09:42:32Z

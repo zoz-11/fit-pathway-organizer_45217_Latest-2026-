@@ -23,10 +23,10 @@ serve(async (req) => {
     oneHourFromNow.setHours(oneHourFromNow.getHours() + 1);
 
     const { data: scheduledWorkouts, error } = await supabaseClient
-      .from('workouts')
+      .from('workout_schedules')
       .select(`
         *,
-        profiles!workouts_athlete_id_fkey(email, full_name)
+        profiles!workout_schedules_athlete_id_fkey(email, full_name)
       `)
       .gte('scheduled_date', new Date().toISOString())
       .lte('scheduled_date', oneHourFromNow.toISOString());
