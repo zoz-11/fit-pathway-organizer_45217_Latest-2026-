@@ -71,3 +71,12 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+## Recent Updates (June 2026)
+This project has recently undergone a major modernization and stabilization phase:
+- **Core Upgrades:** Upgraded to **Vite 8** and updated all React core plugins for modern tooling and performance.
+- **Edge Functions:** Re-engineered push notification logic to utilize the robust `firebase-admin` REST API instead of outdated imports. Fixed schema regressions in analytics and reminder jobs.
+- **Schema Integrity:** The migration timeline was completely refactored. `workout_schedules` is now properly enforced as the source of truth, removing deprecated tables (`workout_assignments`).
+- **CI/CD:** Modernized GitHub Actions to use Node 20 and v4/v5/v6 action runners.
+- **Security:** Resolved all Dependabot vulnerability alerts (0 vulnerabilities).
+- **Codebase Health:** Cleaned up 31 stale remote branches and successfully merged pending i18n & messaging feature enhancements (PR #1).
