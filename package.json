@@ -40,7 +40,7 @@
     "@radix-ui/react-toggle-group": "^1.1.12",
     "@radix-ui/react-tooltip": "^1.2.9",
     "@supabase/supabase-js": "^2.108.1",
-    "@swc/core": "^1.12.9",
+    "@swc/core": "^1.15.43",
     "@tanstack/react-query": "^5.81.5",
     "@types/uuid": "^10.0.0",
     "class-variance-authority": "^0.7.1",
